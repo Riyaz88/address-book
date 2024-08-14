@@ -208,7 +208,6 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
             }
         }
     }
-    //if choice is incorrect
     else
     {
         printf("Invalid Choice !\n");

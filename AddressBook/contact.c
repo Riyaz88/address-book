@@ -6,10 +6,6 @@
 #include "functions.h"
 #include <stdbool.h>
 
-void initialize(AddressBook *addressBook) {
-        loadContactsFromFile(addressBook);
-}
-
 void createContact(AddressBook *addressBook)
 {
     //save user name
@@ -34,8 +30,8 @@ void createContact(AddressBook *addressBook)
 
         if(retVal1 == e_back) //user entered back '<<'
         return;
-        
-        flag1=0;//phNum validation success
+        //phNum validation success
+        flag1=0;
         while(flag2)
         {
             retVal2 = saveEmail(addressBook);
@@ -44,8 +40,8 @@ void createContact(AddressBook *addressBook)
             
             if(retVal2 == e_back) //user entered back '<<'
             return; 
-            
-            flag2 = 0;//email validation success
+            //email validation success
+            flag2 = 0;
             addressBook->contactCount++;
             printf("Contact saved succesfully !\n");  
               
@@ -71,24 +67,22 @@ void searchContact(AddressBook *addressBook)
 
     }while((choice != 1 && choice != 2 && choice != 3) || serialCount < 0);
 
-    //if contacts found display the details
-    if(serialCount > 0)
+    //display contact details
+    printf("\nEnter Serial No : ");
+    if(scanf("%d", &choice) != 1)
     {
-        printf("\nEnter Serial No : ");
-        if(scanf("%d", &choice) != 1)
-        {
-            while(getchar() != '\n');
-        } 
-        if(serialNo > 0 && serialNo <= serialCount)
-        {
-            printf("\nName           Phone No      Email          \n");
-            printf("%s     ",addressBook->contacts[serialVal[serialNo]].name);
-            printf("%s     ",addressBook->contacts[serialVal[serialNo]].phone);
-            printf("%s     \n",addressBook->contacts[serialVal[serialNo]].email);
-        }
-        else
-        printf("Invalid Serial Number !");
-    }     
+        while(getchar() != '\n');
+    } 
+    if(serialNo > 0 && serialNo <= serialCount)
+    {
+        printf("\nName           Phone No      Email          \n");
+        printf("%s     ",addressBook->contacts[serialVal[serialNo]].name);
+        printf("%s     ",addressBook->contacts[serialVal[serialNo]].phone);
+        printf("%s     \n",addressBook->contacts[serialVal[serialNo]].email);
+    }
+    else
+    printf("Invalid Serial Number !");
+        
 }
 
 void editContact(AddressBook *addressBook)
@@ -105,76 +99,74 @@ void editContact(AddressBook *addressBook)
         } 
         if(choice1 == 4)
         return;
-
         serialCount = search(addressBook,choice1,serialVal);
         }while((choice1 != 1 && choice1 != 2 && choice1 != 3) || serialCount < 0);
         
-        //if contacts details found allow the user to edit
-        if(serialCount > 0)
-        {
-            printf("\nEnter Serial No : ");
-            if(scanf("%d", &serialNo) != 1)
-            {
-               while(getchar() != '\n');
-            } 
-            if(serialNo > 0 && serialNo <= serialCount)
-            {
-                int choice2,flag = 1;
-                do{
-                    printf("\nEdit :\n");
-                    printf("1. Name\n2. Phone No\n3. Email\n4. Back\n");
-                    printf("Enter any choice : ");
-                    scanf("%d",&choice2);
-                    if(choice2 == 4)
-                    return;
-                    char str[50];
+    //contacts details found allow the user to edit
+    printf("\nEnter Serial No : ");
+    if(scanf("%d", &serialNo) != 1)
+    {
+        while(getchar() != '\n');
+    } 
 
-                    if(choice2 == 1)
-                    {
-                        printf("Enter new name : ");
-                        scanf(" %[^\n]",str);
-                        strcpy(addressBook->contacts[serialVal[serialNo]].name,str);
-                        printf("Name Changed Successfully !\n");
-                        flag = 0;
-                    }
-                    else if(choice2 == 2)
-                    {
-                        while(flag)
-                        {
-                            printf("Enter new Ph No : ");
-                            scanf(" %[^\n]",str);
-                            if(str[0] == '<' && str[1] == '<' && str[2] == '\0')
-                            break;
-                            if(validatePhNum(addressBook,str))
-                            {   flag = 0;
-                                strcpy(addressBook->contacts[serialVal[serialNo]].phone,str);
-                                printf("Phone Number Saved Successfully !\n"); 
-                            }
-                        }
-                    }
-                    else if(choice2 == 3)
-                    {
-                        while(flag)
-                        {
-                            printf("Enter new email : ");
-                            scanf(" %[^\n]",str);
-                            if(str[0] == '<' && str[1] == '<' && str[2] == '\0')
-                            break;
-                            if(validateEmail(str))
-                            {   flag = 0;
-                                strcpy(addressBook->contacts[serialVal[serialNo]].email,str);
-                                printf("Email Changed Succesfully !\n");
-                            }
-                        }
-                    }
-                    else
-                    printf("Invalid choice !\n");
-            
-                }while((choice2 != 1 && choice2 != 2 && choice2 != 3) || flag);
-            }
-            else
-            printf("Invalid Serial Number !");
+    if(serialNo < 1 || serialNo > serialCount)
+    {
+        printf("Invalid Serial Number !");
+        return;
+    }
+    //edit user details
+    int choice2,flag = 1;
+    do{
+        printf("\nEdit :\n");
+        printf("1. Name\n2. Phone No\n3. Email\n4. Back\n");
+        printf("Enter any choice : ");
+        scanf("%d",&choice2);
+        if(choice2 == 4)
+        return;
+        char str[50];
+
+        if(choice2 == 1)
+        {
+            printf("Enter new name : ");
+            scanf(" %[^\n]",str);
+            strcpy(addressBook->contacts[serialVal[serialNo]].name,str);
+            printf("Name Changed Successfully !\n");
+            flag = 0;
         }
+        else if(choice2 == 2)
+        {
+            while(flag)
+            {
+                printf("Enter new Ph No : ");
+                scanf(" %[^\n]",str);
+                if(str[0] == '<' && str[1] == '<' && str[2] == '\0')
+                break;
+                if(validatePhNum(addressBook,str))
+                {   flag = 0;
+                    strcpy(addressBook->contacts[serialVal[serialNo]].phone,str);
+                    printf("Phone Number Saved Successfully !\n"); 
+                }
+            }
+        }
+        else if(choice2 == 3)
+        {
+            while(flag)
+            {
+                printf("Enter new email : ");
+                scanf(" %[^\n]",str);
+                if(str[0] == '<' && str[1] == '<' && str[2] == '\0')
+                break;
+                if(validateEmail(str))
+                {   flag = 0;
+                    strcpy(addressBook->contacts[serialVal[serialNo]].email,str);
+                    printf("Email Changed Succesfully !\n");
+                }
+            }
+        }
+        else
+        printf("Invalid choice !\n");
+
+    }while((choice2 != 1 && choice2 != 2 && choice2 != 3) || flag);
 }
 
 void deleteContact(AddressBook *addressBook)
@@ -191,32 +183,29 @@ void deleteContact(AddressBook *addressBook)
         } 
         if(choice == 4)
         return;
-
         serialCount = search(addressBook,choice,serialVal);
     }while((choice != 1 && choice != 2 && choice != 3) || serialCount < 0);
     
-    //if contacts details found allow the user  to delete
-    if(serialCount >  0)
+    //contacts details found allow the user  to delete
+    printf("\nEnter Serial No : ");
+    if(scanf("%d", &serialNo) != 1)
     {
-        printf("\nEnter Serial No : ");
-        if(scanf("%d", &serialNo) != 1)
+        while(getchar() != '\n');
+    } 
+    if(serialNo > 0 && serialNo <= serialCount)
+    {
+        for(int i = serialVal[serialNo];i < addressBook->contactCount-1;i++)
         {
-            while(getchar() != '\n');
-        } 
-        if(serialNo > 0 && serialNo <= serialCount)
-        {
-            for(int i = serialVal[serialNo];i < addressBook->contactCount-1;i++)
-            {
-                strcpy(addressBook->contacts[i].name,addressBook->contacts[i+1].name);
-                strcpy(addressBook->contacts[i].phone,addressBook->contacts[i+1].phone);
-                strcpy(addressBook->contacts[i].email,addressBook->contacts[i+1].email);
-            }
-            addressBook->contactCount--;
-        printf("Contact deleted successfully !\n");
+            strcpy(addressBook->contacts[i].name,addressBook->contacts[i+1].name);
+            strcpy(addressBook->contacts[i].phone,addressBook->contacts[i+1].phone);
+            strcpy(addressBook->contacts[i].email,addressBook->contacts[i+1].email);
         }
-        else
-        printf("Invalid serial No !");
+        addressBook->contactCount--;
+    printf("Contact deleted successfully !\n");
     }
+    else
+    printf("Invalid serial No !");
+    
 }
 
 void listContacts(AddressBook *addressBook) 
