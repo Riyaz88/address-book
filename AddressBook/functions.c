@@ -5,13 +5,13 @@
 #include "functions.h"
 #include "contact.h"
 
-int saveName(AddressBook *addressBook)
+status saveName(AddressBook *addressBook)
 {
     char name[50];
     printf("\nEnter Name     : ");
     scanf(" %[^\n]",name);
     if(name[0] == '<' && name[1] == '<' && name[2] == '\0')
-    return -1;
+    return e_back;
 
     int index = 0;
     while(name[index] != '\0')
@@ -20,50 +20,48 @@ int saveName(AddressBook *addressBook)
        break;
        index++;
     }
+
     if(name[index] == '\0')
     {
         strcpy(addressBook->contacts[addressBook->contactCount].name,name);
-        return 1;
+        return e_success;
     }
-    else
-    {
-        printf("Name must contains alphabets only !(Enter '<<' for Back)\n");
-        return 0;
-    }
+    printf("Name must contains alphabets only !(Enter '<<' for Back)\n");
+    return e_failure;   
 }
 
-int savePhNum(AddressBook *addressBook)
+status savePhNum(AddressBook *addressBook)
 {
     char phone[50];
     printf("\nEnter Phone No : ");
     scanf(" %[^\n]",phone);
 
     if(phone[0] == '<' && phone[1] == '<' && phone[2] == '\0')
-    return 1;
-    //passing the input values for phone number validation
+    return e_back;
+    //passing the input value for phone number validation
     if(validatePhNum(addressBook,phone))
     {
         strcpy(addressBook->contacts[addressBook->contactCount].phone,phone);
-        return 2;
+        return e_success;
     }
-    return 0;
+    return e_failure;
 }
 
-int saveEmail(AddressBook *addressBook)
+status saveEmail(AddressBook *addressBook)
 {
     char email[50];
     printf("\nEnter Email : ");
     scanf(" %[^\n]",email);
 
     if(email[0] == '<' && email[1] == '<' && email[2] == '\0')
-    return 1;
-    //passing the input values for email validation
+    return e_back;
+    //passing the input value for email validation
     if(validateEmail(email))
     {
         strcpy(addressBook->contacts[addressBook->contactCount].email,email);
-        return 2;
+        return e_success;
     }
-    return 0;
+    return e_failure;
 }
 
 bool validatePhNum(AddressBook *addressBook,char *phone)
@@ -134,7 +132,8 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
         printf("\nEnter Name : ");
         scanf(" %[^\n]",option);
         if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
-        return -1;
+        return e_back;
+
         for(index = 0;index < addressBook->contactCount;index++)
         {  
             index1 = 0;
@@ -161,7 +160,8 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
         printf("\nEnter Phone : ");
         scanf(" %[^\n]",option);
         if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
-        return -1;
+        return e_back;
+
         for(index = 0;index < addressBook->contactCount;index++)
         {  
             index1 = 0;
@@ -187,7 +187,8 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
         printf("\nEnter Email : ");
         scanf(" %[^\n]",option);
         if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
-        return -1;
+        return e_back;
+
         for(index = 0;index < addressBook->contactCount;index++)
         {  
             index1 = 0;
@@ -202,12 +203,12 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
                 serialCount++;
                 if(serialCount == 1)
                 printf("\nList of Contacts : \n");
-                
                 serialVal[serialCount] = index;
                 printf("%d. %s\n",serialCount,addressBook->contacts[index].email);
             }
         }
     }
+    //if choice is incorrect
     else
     {
         printf("Invalid Choice !\n");

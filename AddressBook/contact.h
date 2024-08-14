@@ -14,6 +14,24 @@ typedef struct {
     int contactCount;
 } AddressBook;
 
+enum choice
+{
+     e_create = 1,
+     e_search,
+     e_edit,
+     e_delete,
+     e_display,
+     e_save,
+     e_exit
+};
+
+typedef enum status
+{ 
+    e_back = -1,
+    e_failure,
+    e_success
+}status;
+
 void createContact(AddressBook *addressBook);
 void searchContact(AddressBook *addressBook);
 void editContact(AddressBook *addressBook);

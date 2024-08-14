@@ -12,46 +12,44 @@ void initialize(AddressBook *addressBook) {
 
 void createContact(AddressBook *addressBook)
 {
-    char flag0 = 1,val;
+    //save user name
+    char flag0 = 1,retval;
     while(flag0)
     {
-        val = saveName(addressBook);
-        if(val)
-        {
-            if(val == -1)
-            return;
-            else
-            flag0 = 0;
-        }      
+        retval = saveName(addressBook);
+        if(retval == e_failure)
+        continue;
+        if(retval == e_back)
+        return;
+        flag0 = 0;
+        
     }
+    //save phnum and name
     char flag1=1,flag2=1,retVal1,retVal2;
     while(flag1)
     {
         retVal1 = savePhNum(addressBook);
-        if(retVal1)
-        {  
-            if(retVal1 == 1) //if user enters back '<'
-            return;
-            else //if phNum validation success
-            {
-                flag1=0;
-                while(flag2)
-                {
-                    retVal2 = saveEmail(addressBook);
-                    if(retVal2)
-                    { 
-                        if(retVal2 == 1) //if user enters back '<'
-                        return; 
-                        else //if email validaton success
-                        {
-                            flag2 = 0;
-                            addressBook->contactCount++;
-                            printf("Contact saved succesfully !\n");
-                        }
-                    }    
-                }  
-            }
-        }        
+        if(retVal1 == e_failure)//phNum validation failed
+        continue;
+
+        if(retVal1 == e_back) //user entered back '<<'
+        return;
+        
+        flag1=0;//phNum validation success
+        while(flag2)
+        {
+            retVal2 = saveEmail(addressBook);
+            if(retVal2 == e_failure)//email validation failed
+            continue;
+            
+            if(retVal2 == e_back) //user entered back '<<'
+            return; 
+            
+            flag2 = 0;//email validation success
+            addressBook->contactCount++;
+            printf("Contact saved succesfully !\n");  
+              
+        }           
     }   
 }
 

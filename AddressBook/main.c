@@ -21,24 +21,24 @@ int main() {
             while(getchar() != '\n');
         } 
         switch (choice) {
-            case 1:
+            case e_create:
                 createContact(&addressBook);
                 break;
-            case 2:
+            case e_search:
                 searchContact(&addressBook);
                 break;
-            case 3:
+            case e_edit:
                 editContact(&addressBook);
                 break;
-            case 4:
+            case e_delete:
                 deleteContact(&addressBook);
                 break;
-            case 5:
+            case e_display:
                 listContacts(&addressBook);
                 break;
-            case 6:
+            case e_save:
                 saveContactsToFile(&addressBook);
-            case 7:
+            case e_exit:
                 break;
             default:
                 printf("Invalid choice. Please try again.\n");
