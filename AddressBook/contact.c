@@ -192,20 +192,20 @@ void deleteContact(AddressBook *addressBook)
     {
         while(getchar() != '\n');
     } 
-    if(serialNo > 0 && serialNo <= serialCount)
+    if(serialNo < 1 || serialNo > serialCount)
     {
-        for(int i = serialVal[serialNo];i < addressBook->contactCount-1;i++)
-        {
-            strcpy(addressBook->contacts[i].name,addressBook->contacts[i+1].name);
-            strcpy(addressBook->contacts[i].phone,addressBook->contacts[i+1].phone);
-            strcpy(addressBook->contacts[i].email,addressBook->contacts[i+1].email);
-        }
-        addressBook->contactCount--;
-    printf("Contact deleted successfully !\n");
+        printf("Invalid Serial Number !");
+        return;
     }
-    else
-    printf("Invalid serial No !");
-    
+    for(int i = serialVal[serialNo];i < addressBook->contactCount-1;i++)
+    {
+        strcpy(addressBook->contacts[i].name,addressBook->contacts[i+1].name);
+        strcpy(addressBook->contacts[i].phone,addressBook->contacts[i+1].phone);
+        strcpy(addressBook->contacts[i].email,addressBook->contacts[i+1].email);
+    }
+    addressBook->contactCount--;
+    printf("Contact deleted successfully !\n");
+  
 }
 
 void listContacts(AddressBook *addressBook) 

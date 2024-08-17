@@ -8,3 +8,4 @@ int savePhNum(AddressBook *addressBook);
 int saveEmail(AddressBook *addressBook);
 bool myStrcmp(const char* str1,const char* str2);
 int saveName(AddressBook *addressBook);
+bool back(char *option);

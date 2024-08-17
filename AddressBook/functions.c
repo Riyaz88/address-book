@@ -10,7 +10,7 @@ status saveName(AddressBook *addressBook)
     char name[50];
     printf("\nEnter Name     : ");
     scanf(" %[^\n]",name);
-    if(name[0] == '<' && name[1] == '<' && name[2] == '\0')
+    if(back(name))
     return e_back;
 
     int index = 0;
@@ -20,7 +20,6 @@ status saveName(AddressBook *addressBook)
        break;
        index++;
     }
-
     if(name[index] == '\0')
     {
         strcpy(addressBook->contacts[addressBook->contactCount].name,name);
@@ -36,7 +35,7 @@ status savePhNum(AddressBook *addressBook)
     printf("\nEnter Phone No : ");
     scanf(" %[^\n]",phone);
 
-    if(phone[0] == '<' && phone[1] == '<' && phone[2] == '\0')
+    if(back(phone))
     return e_back;
     //passing the input value for phone number validation
     if(validatePhNum(addressBook,phone))
@@ -53,7 +52,7 @@ status saveEmail(AddressBook *addressBook)
     printf("\nEnter Email : ");
     scanf(" %[^\n]",email);
 
-    if(email[0] == '<' && email[1] == '<' && email[2] == '\0')
+    if(back(email))
     return e_back;
     //passing the input value for email validation
     if(validateEmail(email))
@@ -66,39 +65,40 @@ status saveEmail(AddressBook *addressBook)
 
 bool validatePhNum(AddressBook *addressBook,char *phone)
 {
-    if(strlen(phone) == 10)
+    //number must be ten digits
+    if(strlen(phone) != 10)
     {  
-        int index1 = 0;
-        while(phone[index1])
-        {
-            if(phone[index1] < '0' || phone[index1] > '9')
-            break;
-            index1++;
-        }
-        if(index1 == strlen(phone))
-        {   int index2;
-            for(index2 = 0;index2 < addressBook->contactCount;index2++)
-            {
-                if(!strcmp(phone,addressBook->contacts[index2].phone))
-                break;  
-            }
-
-            if(index2 == addressBook->contactCount)
-            return true;
-            else
-            {   printf("Mobile Number already exist !(Enter '<<' for Back)\n");
-                return false;  
-            } 
-        }
-        else
-        {   printf("Invalid Mobile Number !\n");
-            return false;
-        }  
-    }
-    else 
-    {   printf("Phone No must be Ten digits !(Enter '<<' for Back)\n");
+        printf("Phone No must be Ten digits !(Enter '<<' for Back)\n");
         return false;  
     }
+
+    //phone number contains only numbers
+    int index1 = 0;
+    while(phone[index1])
+    {
+        if(phone[index1] < '0' || phone[index1] > '9')
+        break;
+        index1++;
+    }
+    if(index1 != strlen(phone))
+    {   
+        printf("Invalid Mobile Number !\n");
+        return false;
+    }
+    
+    //mobile number already exists
+    int index2;
+    for(index2 = 0;index2 < addressBook->contactCount;index2++)
+    {
+        if(!strcmp(phone,addressBook->contacts[index2].phone))
+        break;  
+    }
+    if(index2 != addressBook->contactCount)
+    {   
+        printf("Mobile Number already exist !(Enter '<<' for Back)\n");
+        return false;  
+    } 
+    return true;     
 }
 
 bool validateEmail(char *email)
@@ -131,7 +131,7 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
     {
         printf("\nEnter Name : ");
         scanf(" %[^\n]",option);
-        if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
+        if(back(option))
         return e_back;
 
         for(index = 0;index < addressBook->contactCount;index++)
@@ -148,7 +148,6 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
                 serialCount++;
                 if(serialCount == 1)
                 printf("\nList of Contacts : \n");
-                
                 serialVal[serialCount] = index;
                 printf("%d. %s\n",serialCount,addressBook->contacts[index].name);
             }
@@ -159,7 +158,7 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
     {
         printf("\nEnter Phone : ");
         scanf(" %[^\n]",option);
-        if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
+        if(back(option))
         return e_back;
 
         for(index = 0;index < addressBook->contactCount;index++)
@@ -184,9 +183,9 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
     //seraching the email adresses in addressbook
     else if(choice == 3)
     {
-        printf("\nEnter Email : ");
+        printf("\nEnter name : ");
         scanf(" %[^\n]",option);
-        if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
+        if(back(option))
         return e_back;
 
         for(index = 0;index < addressBook->contactCount;index++)
@@ -213,7 +212,7 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
         printf("Invalid Choice !\n");
         break;
     }
-    
+         
     if(serialCount == 0)
     {
         printf("No results Found !Enter '<<' for Back)\n");
@@ -234,5 +233,12 @@ bool myStrcmp(const char* str1,const char* str2)
     if(*str1 == '\0' && *str2 == '\0')
     return true;
     else
+    return false;
+}
+
+bool back(char *option)
+{
+    if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
+    return true;
     return false;
 }
