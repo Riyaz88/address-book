@@ -121,15 +121,13 @@ bool validateEmail(char *email)
     }
 }
 
-int search(AddressBook *addressBook,int choice,int *serialVal)
+int search(AddressBook *addressBook,int *serialVal,char *(*funPtr)(Contact *))
 {
-    char option[50];
+    char option[50],*rval;
     int index = 0,index1,serialCount=0;
+
     do{
-    //seraching the names in addressbook
-    if(choice == 1)
-    {
-        printf("\nEnter Name : ");
+        printf("\nEnter Details : ");
         scanf(" %[^\n]",option);
         if(back(option))
         return e_back;
@@ -139,7 +137,8 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
             index1 = 0;
             while(option[index1] != '\0') 
             {
-                if(option[index1] != addressBook->contacts[index].name[index1])
+                rval = funPtr(&addressBook->contacts[index]);
+                if(option[index1] != rval[index1])
                 break;
                 index1++;
             } 
@@ -149,70 +148,9 @@ int search(AddressBook *addressBook,int choice,int *serialVal)
                 if(serialCount == 1)
                 printf("\nList of Contacts : \n");
                 serialVal[serialCount] = index;
-                printf("%d. %s\n",serialCount,addressBook->contacts[index].name);
+                printf("%d. %s\n",serialCount,rval);
             }
-        }
-    }
-    //seraching the phone numbers in addressbook
-    else if(choice == 2)
-    {
-        printf("\nEnter Phone : ");
-        scanf(" %[^\n]",option);
-        if(back(option))
-        return e_back;
-
-        for(index = 0;index < addressBook->contactCount;index++)
-        {  
-            index1 = 0;
-            while(option[index1] != '\0') 
-            {
-                if(option[index1] != addressBook->contacts[index].phone[index1])
-                break;
-                index1++;
-            } 
-            if(option[index1] == '\0')
-            {
-                serialCount++;
-                if(serialCount == 1)
-                printf("\nList of Contacts : \n");
-                serialVal[serialCount] = index;
-                printf("%d. %s\n",serialCount,addressBook->contacts[index].phone);
-            }
-        }
-    }
-    //seraching the email adresses in addressbook
-    else if(choice == 3)
-    {
-        printf("\nEnter name : ");
-        scanf(" %[^\n]",option);
-        if(back(option))
-        return e_back;
-
-        for(index = 0;index < addressBook->contactCount;index++)
-        {  
-            index1 = 0;
-            while(option[index1] != '\0') 
-            {
-                if(option[index1] != addressBook->contacts[index].email[index1])
-                break;
-                index1++;
-            } 
-            if(option[index1] == '\0')
-            {
-                serialCount++;
-                if(serialCount == 1)
-                printf("\nList of Contacts : \n");
-                serialVal[serialCount] = index;
-                printf("%d. %s\n",serialCount,addressBook->contacts[index].email);
-            }
-        }
-    }
-    else
-    {
-        printf("Invalid Choice !\n");
-        break;
-    }
-         
+        }  
     if(serialCount == 0)
     {
         printf("No results Found !Enter '<<' for Back)\n");
@@ -241,4 +179,34 @@ bool back(char *option)
     if(option[0] == '<' && option[1] == '<' && option[2] == '\0')
     return true;
     return false;
+}
+
+char *name(Contact *contacts)
+{
+    return contacts->name;
+}
+
+char *phone(Contact *contacts)
+{
+    return contacts->phone;
+}
+
+char *email(Contact *contacts)
+{
+    return contacts->email;
+}
+
+int validateChoice(AddressBook *addressBook,int *serialVal,int choice)
+{
+    int serialCount = 0;
+    if(choice == 1) 
+    serialCount = search(addressBook,serialVal,name);
+    else if(choice == 2) 
+    serialCount = search(addressBook,serialVal,phone);
+    else if(choice == 3) 
+    serialCount = search(addressBook,serialVal,email);
+    else
+    printf("Invalid Choice !\n");
+
+    return serialCount;
 }
