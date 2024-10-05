@@ -1,3 +1,7 @@
+/* Name : Riyaz Ahamed IB
+   Date : 18/08/2024
+   Description : AddressBook
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -135,7 +139,7 @@ void editContact(AddressBook *addressBook)
             {
                 printf("Enter new Ph No : ");
                 scanf(" %[^\n]",str);
-                if(str[0] == '<' && str[1] == '<' && str[2] == '\0')
+                if(back(str))
                 break;
                 if(validatePhNum(addressBook,str))
                 {   flag = 0;
@@ -150,7 +154,7 @@ void editContact(AddressBook *addressBook)
             {
                 printf("Enter new email : ");
                 scanf(" %[^\n]",str);
-                if(str[0] == '<' && str[1] == '<' && str[2] == '\0')
+                if(back(str))
                 break;
                 if(validateEmail(str))
                 {   flag = 0;
