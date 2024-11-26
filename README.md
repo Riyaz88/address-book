@@ -1,0 +1,1 @@
+Address Book is a simple program written in C that allows users to manage contact information efficiently. It stores contact details such as name, phone number, and email address in a CSV file. The application provides functionalities to create, update, display, and manage contacts.
